@@ -23,15 +23,15 @@ jp_data = jp_response.json()
 
 with open('./dump.csv', 'w') as f:
     writer = csv.writer(f, delimiter='\t')
-    header = ['EVENT_TYPE', 'SUMMARY(EN)', 'SUMMARY(JP)', 'DESCRIPTION(EN)', 'DESCRIPTION(JP)', 'OID']
+    header = ['EVENT_TYPE', 'SUMMARY(EN)', 'SUMMARY(JP)', 'DESCRIPTION(EN)', 'DESCRIPTION(JP)', 'SNMP_ENABLED', 'OID']
     writer.writerow(header)
     for _, o in enumerate(origin_data['results']):
         for _, j in enumerate(jp_data['results']):
             if o['event_type'] == j['event_type']:
                 # true_oid
                 writer.writerow([o['event_type'], o['summary'], j['summary'],
-                    o['description'], j['description'], o['event_true_snmp_oid']])
+                    o['description'], j['description'], not o['suppress_snmp_trap'], o['event_true_snmp_oid']])
                 # false_oid
                 writer.writerow([o['event_type'], o['summary'], j['summary'],
-                    o['description_on_clear'], j['description_on_clear'], o['event_false_snmp_oid']])
+                    o['description_on_clear'], j['description_on_clear'], not o['suppress_snmp_trap'], o['event_false_snmp_oid']])
 
